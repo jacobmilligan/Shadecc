@@ -9,6 +9,8 @@
 //  Copyright (c) 2016 Jacob Milligan. All rights reserved.
 //
 
+#pragma once
+
 #include <cstdint>
 
 namespace shadecc {
