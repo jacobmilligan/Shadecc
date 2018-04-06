@@ -11,7 +11,7 @@
 
 #pragma once
 
-#include <Shadecc/Shadecc.hpp>
+#include <Shadecc.hpp>
 
 namespace {name} {{
 
