@@ -1,9 +1,8 @@
 import glob
 import os
-import subprocess
 
 import shadecc.metal as metal
-import shadecc.bin as bin
+import shadecc.utils as utils
 
 from tqdm import tqdm
 
@@ -20,41 +19,41 @@ def get_src_name(shader):
     return shader.name + '.' + shader.stage + '.glsl'
 
 
-def compile_glsl(dir, spv, shader_obj):
+def compile_glsl(parent_dir, spv, shader_obj):
     """
     Compiles GLSL from SPIR-V code and flattens all uniform blocks
-    :param dir: The shaders parent build directory
+    :param parent_dir: The shaders parent build directory
     :param spv: SPIR-V file name
     :param shader_obj:
     """
-    output_path = shader_obj.name + '.' + shader_obj.stage + '.glsl'
-    cmd = [bin.get_path('spirv-cross'), '--version', '330', spv, '--output', output_path,
-           '--flatten-ubo']
-    output = subprocess.check_output(cmd, cwd=dir)
-    if len(output) > 0:
-        tqdm.write(bytes.decode(output).strip())
-    with open(os.path.join(dir, output_path), 'r') as glsl_file:
+    output_path = get_src_name(shader_obj)
+    output_path = os.path.abspath(os.path.join(parent_dir, output_path))
+    full_path = os.path.abspath(os.path.join(parent_dir, spv))
+    utils.spirv_wrapper_compile(full_path, output_path)
+    # cmd = [utils.get_bin_path('spirv-cross'), '--version', '330', spv, '--output', output_path,
+    #        '--flatten-ubo']
+    # utils.call(cmd, parent_dir)
+    with open(os.path.join(parent_dir, output_path), 'r') as glsl_file:
         shader_obj.glsl_src = glsl_file.read()
 
 
-def compile_spirv(dir, shader):
+def compile_spirv(output_dir, shader):
     """
     Compiles preprocessed GLSL code to SPIR-V
-    :param dir: Location to output temp file and .spv
+    :param output_dir: Location to output temp file and .spv
     :param shader:
     :return:
     """
     # write to temp file
-    temp_path = os.path.join(dir, get_src_name(shader))
+    temp_path = os.path.join(output_dir, get_src_name(shader))
     with open(temp_path, 'w') as src:
         src.write(shader.glsl_src)
 
     spv_name = get_src_name(shader).replace('glsl', 'spv')
     src_name = get_src_name(shader)
-    tool = bin.get_path('glslangValidator')
-    cmd = [tool, '--aml', '-S', shader.stage, '-G', '-o', spv_name, src_name]
-    out = subprocess.check_output(cmd, cwd=dir)
-    tqdm.write(bytes.decode(out).strip())
+    tool = utils.get_bin_path('glslangValidator')
+    cmd = [tool, '-S', shader.stage, '-G', '--auto-map-locations', '-o', spv_name, src_name]
+    utils.call(cmd, output_dir)
 
     os.remove(temp_path)
     return spv_name
