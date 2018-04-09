@@ -1,0 +1,1 @@
+{{ "{name}", {member_count}, const_cast<char**>( {name}_members ) }}

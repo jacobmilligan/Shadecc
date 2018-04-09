@@ -15,18 +15,22 @@ def get_bin_path(tool):
     return tool_path
 
 
-def spirv_wrapper_compile(input, output):
+def get_dll_path(lib):
+    dll = 'lib' + lib
+    system = platform.system()
+    if system == 'Darwin':
+        dll += '.dylib'
+    elif system == 'Windows':
+        dll += '.dll'
+    else:
+        dll += '.so'
     lib_path = os.path.join(os.path.dirname(__file__), 'lib')
-    lib_path = os.path.join(lib_path, platform.system())
-    for f in os.listdir(lib_path):
-        if 'spirv_wrapper' in f:
-            lib_path = os.path.join(lib_path, f)
-    lib = ctypes.cdll.LoadLibrary(lib_path)
-    success = lib.compile(ctypes.c_char_p(input.encode('utf-8')),
-                          ctypes.c_char_p(output.encode('utf-8')),
-                          330, False)
-    if success != 0:
-        raise RuntimeError('Unable to compile GLSL')
+    platform_path = os.path.join(lib_path, system)
+    dll_path = os.path.join(platform_path, dll)
+    if not os.path.exists(dll_path):
+        raise FileNotFoundError('Couldn\'t find a DLL for {0} at expected location: '
+                                '{1}'.format(lib, dll_path))
+    return dll_path
 
 
 def call(cmd, working_dir):

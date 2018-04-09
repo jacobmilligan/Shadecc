@@ -8,6 +8,7 @@ from tqdm import tqdm
 
 from shadecc.preprocessor import Preprocessor
 from shadecc.template import generate_cpp
+from shadecc.spirv_wrapper import SpirvWrapper
 
 
 def get_src_name(shader):
@@ -29,7 +30,9 @@ def compile_glsl(parent_dir, spv, shader_obj):
     output_path = get_src_name(shader_obj)
     output_path = os.path.abspath(os.path.join(parent_dir, output_path))
     full_path = os.path.abspath(os.path.join(parent_dir, spv))
-    utils.spirv_wrapper_compile(full_path, output_path)
+    wrapper = SpirvWrapper()
+    wrapper.compile(full_path, output_path)
+    shader_obj.uniform_blocks = wrapper.get_uniform_blocks(full_path)
     # cmd = [utils.get_bin_path('spirv-cross'), '--version', '330', spv, '--output', output_path,
     #        '--flatten-ubo']
     # utils.call(cmd, parent_dir)

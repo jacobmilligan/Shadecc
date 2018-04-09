@@ -25,5 +25,4 @@ set(glslang_libraries glslang HLSL OSDependent OGLCompiler SPIRV glslang-default
 target_link_libraries(${PROJECT_NAME} PRIVATE ${glslang_libraries})
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/deps/glslang)
 
-add_executable(${PROJECT_NAME}_test spirv_wrapper/main.cpp)
-target_link_libraries(${PROJECT_NAME}_test ${PROJECT_NAME})
+add_subdirectory(test)

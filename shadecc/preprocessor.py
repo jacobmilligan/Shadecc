@@ -21,6 +21,7 @@ class Shader(object):
         self.hlsl_src = ''
         self.msl_bytes = []
         self.hlsl_bytes = []
+        self.uniform_blocks = []
 
 
 class PragmaProcessor(object):

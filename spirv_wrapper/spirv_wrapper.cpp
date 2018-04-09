@@ -40,7 +40,6 @@ std::vector<unsigned int> get_spirv(const char* path)
 
 bool write_glsl(const std::string& src, const char* output_dir)
 {
-    printf("%s\n", output_dir);
     auto file = fopen(output_dir, "w+");
     if (file == nullptr) {
         return false;
@@ -60,6 +59,49 @@ void fix_uniforms(spirv_cross::Compiler* compiler)
 }
 
 
+
+
+}
+
+int get_uniform_blocks(const char* spv_file, uniform_block_t** buffer, uint32_t* block_count)
+{
+    auto spirv = sw::get_spirv(spv_file);
+    if (spirv.empty()) {
+        return -1;
+    }
+
+    spirv_cross::CompilerGLSL compiler(spirv);
+    auto resources = compiler.get_shader_resources();
+    *block_count = static_cast<uint32_t>(resources.uniform_buffers.size());
+    *buffer = static_cast<uniform_block*>(malloc(sizeof(uniform_block) * *block_count));
+
+    uint32_t ub = 0;
+    std::vector<const char*> names;
+    for (auto& res : resources.uniform_buffers) {
+        names.clear();
+        auto cur_ub = &(*buffer)[ub];
+        auto type = compiler.get_type(res.type_id);
+        auto num_members = type.member_types.size();
+
+        cur_ub->name = static_cast<char*>(malloc(res.name.length() * sizeof(char)));
+        strcpy(cur_ub->name, res.name.c_str());
+        cur_ub->member_count = static_cast<uint32_t>(num_members);
+
+        for (uint32_t i = 0; i < num_members; ++i) {
+            const auto& name = compiler.get_member_name(res.base_type_id, i);
+            names.push_back(name.c_str());
+        }
+
+        auto size = names.size() * sizeof(char*);
+        cur_ub->member_names = static_cast<char**>(malloc(size));
+        for (int j = 0; j < names.size(); ++j) {
+            cur_ub->member_names[j] = static_cast<char*>(malloc(strlen(names[j]) * sizeof(char*)));
+            strcpy(cur_ub->member_names[j], names[j]);
+        }
+        ++ub;
+    }
+
+    return 0;
 }
 
 int compile(const char* spv_input, const char* output_path, const uint32_t glslversion,
