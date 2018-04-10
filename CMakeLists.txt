@@ -1,13 +1,13 @@
 project(spirv_wrapper)
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.5.0)
 
 set(CMAKE_CXX_STANDARD 14)
 
 set(src_list spirv_wrapper/spirv_wrapper.cpp)
 
 # Output binaries and libraries
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/shadecc/bin/${CMAKE_SYSTEM_NAME})
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/shadecc/lib/${CMAKE_SYSTEM_NAME})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/shadecc/bin/${CMAKE_SYSTEM_NAME})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/shadecc/lib/${CMAKE_SYSTEM_NAME})
 
 add_library(${PROJECT_NAME} SHARED ${src_list})
 

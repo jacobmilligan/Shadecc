@@ -1,1 +1,5 @@
 recursive-include shadecc/bin *
+recursive-include shadecc/lib *
+recursive-include shadecc/templates *
+exclude cmake-build-debug
+exclude cmake-build-release

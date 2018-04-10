@@ -1,5 +1,5 @@
 project(spirv_wrapper_test)
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.5.0)
 
 set(CMAKE_CXX_STANDARD 14)
 

@@ -2,7 +2,7 @@ import os
 import ctypes
 import platform
 
-from utils import get_dll_path
+from shadecc.utils import get_dll_path
 
 
 class UniformBlock(object):
