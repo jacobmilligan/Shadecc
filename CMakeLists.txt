@@ -7,7 +7,7 @@ set(src_list spirv_wrapper/spirv_wrapper.cpp)
 
 # Output binaries and libraries
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/shadecc/bin/${CMAKE_SYSTEM_NAME})
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/shadecc/lib/${CMAKE_SYSTEM_NAME})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/shadecc/libs/${CMAKE_SYSTEM_NAME})
 
 add_library(${PROJECT_NAME} SHARED ${src_list})
 

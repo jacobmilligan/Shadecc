@@ -16,7 +16,7 @@ def get_bin_path(tool):
 
 
 def get_dll_path(lib):
-    dll = 'lib' + lib
+    dll = 'libs' + lib
     system = platform.system()
     if system == 'Darwin':
         dll += '.dylib'
@@ -24,7 +24,7 @@ def get_dll_path(lib):
         dll += '.dll'
     else:
         dll += '.so'
-    lib_path = os.path.join(os.path.dirname(__file__), 'lib')
+    lib_path = os.path.join(os.path.dirname(__file__), 'libs')
     platform_path = os.path.join(lib_path, system)
     dll_path = os.path.join(platform_path, dll)
     if not os.path.exists(dll_path):
