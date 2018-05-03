@@ -44,6 +44,8 @@ def generate_cpp(output_dir, shader):
                 })
                 result.append(ub)
             data[key] = ', '.join(result)
+        elif key == 'instanced_vars':
+            data['is_instanced'] = str(len(value) > 0).lower()
         elif type(value) == list:
             data[key] = ', '.join(hex(elem) for elem in value)
         else:

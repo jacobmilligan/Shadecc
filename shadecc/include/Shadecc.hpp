@@ -39,6 +39,8 @@ struct ShaderSource {
     const uint32_t num_uniform_blocks;
     /// Array containing each uniform block and its members
     const UniformBlock* uniform_blocks;
+    /// Indicates whether the shader source contains instanced data or not
+    bool is_instanced;
 };
 
 

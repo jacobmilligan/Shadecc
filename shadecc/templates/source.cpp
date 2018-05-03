@@ -52,7 +52,8 @@ shadecc::ShaderSource source = {{
     msl_bytes,
     hlsl_bytes,
     {uniform_block_count},
-    ub_list
+    ub_list,
+    {is_instanced}
 }};
 
 
